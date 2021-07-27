@@ -1,3 +1,63 @@
+# Introduction
+
+End-to-end machine learning pipeline of a random forest classifier model, to predict rental property prices. This is second course project of Udacity's MLDevOps nanodegree.
+
+# Requirements
+
+The pipeline uses Weights & Biases (`wandb`) for versioning and artifact tracking. You will need an account with `wandb`, and logged in, prior to running the pipeline.
+
+1. Clone the repo: `git clone https://github.com/ashrielbrian/nd0821-c2-build-model-workflow-starter.git`
+2. In the root directory, install dependencies: `conda env create -f environment.yml` 
+
+# Getting started
+
+## Remote execution
+Given that the repository itself is a MLflow pipeline, it can be used remotely as such:
+
+```bash
+mlflow run https://github.com/ashrielbrian/nd0821-c2-build-model-workflow-starter.git -v <version> [-P ...]
+```
+
+For possible parameters in the `-P` flag, refer to the `config.yaml` in the root directory. As the repo uses `hydra`, you will need to specify the parameters as `hydra_options`. E.g.,
+
+```bash
+mlflow run https://github.com/ashrielbrian/nd0821-c2-build-model-workflow-starter.git -v 1.0.1 \
+       hydra_options="etl.sample='sample2.csv' modeling.max_tfidf_features=12"
+```
+
+## Independent execution
+Each component can also be executed independently of the rest. If the repository has been cloned to your local machine, in the root directory of the repo, run:
+
+```bash
+mlflow run . -P steps=<step-name-1>,<step-name-2>
+```
+
+Options for the steps are:
+
+- `download`
+- `basic_cleaning`
+- `data_check`
+- `data_split`
+- `train_random_forest`
+- `test_regression_model`
+
+
+## Hyperparameter search
+
+The hyperparameter search uses `hydra` and the `hydra-joblib` plugin. An example of the execution is as below:
+
+```bash
+mlflow run . -P steps="train_random_forest" \
+             -P hydra_options="modeling.max_tfidf_features=10,15,30 \
+                              modeling.random_forest.max_features=range(0.1,1,0.15) \
+                              hydra.launcher.n_jobs=6 hydra/launcher=joblib -m"
+```
+
+
+The following is Udacity's original README. This is left here for future reference.
+
+---
+
 # Build an ML Pipeline for Short-Term Rental Prices in NYC
 You are working for a property management company renting rooms and properties for short periods of 
 time on various rental platforms. You need to estimate the typical price for a given property based 
