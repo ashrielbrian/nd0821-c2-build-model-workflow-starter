@@ -1,6 +1,6 @@
 # Introduction
 
-End-to-end machine learning pipeline of a random forest classifier model, to predict rental property prices. This is second course project of Udacity's MLDevOps nanodegree.
+End-to-end machine learning pipeline of a random forest classifier model, to predict rental property prices. This is the second course project of Udacity's MLDevOps nanodegree.
 
 # Requirements
 
@@ -53,10 +53,16 @@ mlflow run . -P steps="train_random_forest" \
                               hydra.launcher.n_jobs=6 hydra/launcher=joblib -m"
 ```
 
+# Future work
 
-The following is Udacity's original README. This is left here for future reference.
+- Explore the Ray plugin for hydra for distributed workflows
+- Improve the EDA
+- Improve the model performance through feature engineering
+
 
 ---
+_The following is Udacity's original README. This is left here for future reference._
+
 
 # Build an ML Pipeline for Short-Term Rental Prices in NYC
 You are working for a property management company renting rooms and properties for short periods of 
