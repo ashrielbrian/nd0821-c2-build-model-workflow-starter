@@ -23,6 +23,8 @@ _steps = [
 # This automatically reads in the configuration
 @hydra.main(config_name='config')
 def go(config: DictConfig):
+    
+    hydra_root = hydra.utils.get_original_cwd()
 
     # Setup the wandb experiment. All runs will be grouped under this name
     os.environ["WANDB_PROJECT"] = config["main"]["project_name"]
@@ -49,16 +51,31 @@ def go(config: DictConfig):
             )
 
         if "basic_cleaning" in active_steps:
-            ##################
-            # Implement here #
-            ##################
-            pass
+            _ = mlflow.run(
+                os.path.join(hydra_root, 'src', 'basic_cleaning'),
+                'main',
+                parameters={
+                    "input_artifact": f"{config['main']['project_name']}/sample.csv:latest",
+                    "output_artifact": "clean_sample.csv",
+                    "output_type": "clean_sample",
+                    "output_description": " Data with outliers and null values removed",
+                    "min_price": config['etl']['min_price'],
+                    "max_price": config['etl']['max_price'],
+                }
+            )
 
         if "data_check" in active_steps:
-            ##################
-            # Implement here #
-            ##################
-            pass
+            _ = mlflow.run(
+                os.path.join(hydra_root, 'src', 'data_check'),
+                'main',
+                parameters={
+                    'csv': f"{config['main']['project_name']}/clean_sample.csv:latest",
+                    'ref': f"{config['main']['project_name']}/clean_sample.csv:reference",
+                    'kl_threshold': config['data_check']['kl_threshold'],
+                    'min_price': config['etl']['min_price'],
+                    'max_price': config['etl']['max_price'],
+                }
+            )
 
         if "data_split" in active_steps:
             ##################
