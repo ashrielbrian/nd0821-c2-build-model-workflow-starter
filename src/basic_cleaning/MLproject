@@ -23,11 +23,11 @@ entry_points:
 
       min_price:
         description: Minimum Airbnb rental price accepted
-        type: string
+        type: float
 
       max_price:
         description: Maximum Airbnb rental price accepted
-        type: string
+        type: float
 
 
     command: >-
